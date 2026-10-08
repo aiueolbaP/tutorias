@@ -11,12 +11,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+    //bcrypts
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+    //controla las peticiones y redirecciona dependiendo del rol que tenga
+    //maneja igual logout y formulario de login sin tener que escribir controllers
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

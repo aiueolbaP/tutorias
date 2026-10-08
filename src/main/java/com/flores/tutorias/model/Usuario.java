@@ -21,7 +21,7 @@ public class Usuario {
     private String email;
 
     @Column(nullable = false)
-    private String password; // hash BCrypt
+    private String password; // BCrypt
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

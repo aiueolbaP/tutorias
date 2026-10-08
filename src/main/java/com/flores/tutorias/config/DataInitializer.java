@@ -14,7 +14,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UsuarioRepository repo;
     private final PasswordEncoder encoder;
-
+    //si no hay datos al correr, esto carga para pruebitas
     @Override
     public void run(String... args) {
         crearSiNoExiste("Admin", "admin@tutorias.com", "admin123", Rol.ADMIN);

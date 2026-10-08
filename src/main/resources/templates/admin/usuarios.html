@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios</title>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script>
+        // Agrega el token CSRF a toda petición que haga HTMX
+        document.addEventListener('htmx:configRequest', (e) => {
+            const token = document.querySelector('meta[name=_csrf]').content;
+            const header = document.querySelector('meta[name=_csrf_header]').content;
+            e.detail.headers[header] = token;
+        });
+    </script>
+</head>
+<body>
+<h1>Gestión de usuarios</h1>
+<a th:href="@{/admin/panel}">Volver al panel</a>
+
+<div id="contenido" hx-target="#contenido">
+    <div th:fragment="lista">
+        <p th:if="${error}" th:text="${error}" style="color:red"></p>
+
+        <button th:hx-get="@{/admin/usuarios/nuevo}">Nuevo usuario</button>
+
+        <table border="1">
+            <thead>
+            <tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Activo</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${usuarios}">
+                <td th:text="${u.nombre}"></td>
+                <td th:text="${u.email}"></td>
+                <td th:text="${u.rol}"></td>
+                <td th:text="${u.activo} ? 'Sí' : 'No'"></td>
+                <td>
+                    <button th:hx-get="@{/admin/usuarios/{id}/editar(id=${u.id})}">Editar</button>
+                    <button th:hx-delete="@{/admin/usuarios/{id}(id=${u.id})}"
+                            hx-confirm="¿Eliminar este usuario?">Eliminar</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

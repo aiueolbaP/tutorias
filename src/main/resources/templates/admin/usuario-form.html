@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="form">
+    <h2 th:text="${usuarioForm.id == null} ? 'Nuevo usuario' : 'Editar usuario'"></h2>
+
+    <form th:hx-post="@{/admin/usuarios}" th:object="${usuarioForm}">
+        <input type="hidden" th:field="*{id}">
+
+        <div>
+            <label>Nombre <input type="text" th:field="*{nombre}"></label>
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Correo <input type="email" th:field="*{email}"></label>
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Contraseña
+                <input type="password" th:field="*{password}"
+                       th:placeholder="${usuarioForm.id != null} ? 'Dejar vacío para no cambiar' : ''">
+            </label>
+            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Rol
+                <select th:field="*{rol}">
+                    <option value="">-- Selecciona --</option>
+                    <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+                </select>
+            </label>
+            <span th:if="${#fields.hasErrors('rol')}" th:errors="*{rol}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label><input type="checkbox" th:field="*{activo}"> Activo</label>
+        </div>
+
+        <button type="submit">Guardar</button>
+        <button type="button" th:hx-get="@{/admin/usuarios/lista}">Cancelar</button>
+    </form>
+</div>
+</body>
+</html>
