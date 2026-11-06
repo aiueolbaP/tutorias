@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="form">
+    <h2 th:text="${materiaForm.id == null} ? 'Nueva materia' : 'Editar materia'"></h2>
+
+    <form th:hx-post="@{/admin/materias}" th:object="${materiaForm}">
+        <input type="hidden" th:field="*{id}">
+
+        <div>
+            <label>Nombre
+                <input type="text" th:field="*{nombre}">
+            </label>
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red"></span>
+        </div>
+
+        <div>
+            <!-- FK a carrera: dropdown con las carreras disponibles, nunca input manual de ID -->
+            <label>Carrera
+                <select th:field="*{carreraId}">
+                    <option value="">-- Selecciona una carrera --</option>
+                    <option th:each="c : ${carreras}" th:value="${c.id}" th:text="${c.nombre}"></option>
+                </select>
+            </label>
+            <span th:if="${#fields.hasErrors('carreraId')}" th:errors="*{carreraId}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Descripción
+                <input type="text" th:field="*{descripcion}">
+            </label>
+            <span th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Tags asociados:</label>
+            <div style="max-height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; margin: 5px 0;">
+                <div th:each="tag : ${tags}">
+                    <label>
+                        <input type="checkbox" th:field="*{tagIds}" th:value="${tag.id}">
+                        <span th:text="${tag.nombre}"></span>
+                    </label>
+                </div>
+                <div th:if="${#lists.isEmpty(tags)}"><em>No hay tags registrados aún</em></div>
+            </div>
+        </div>
+
+        <div>
+            <label>Nuevos tags (opcional, separados por coma):
+                <input type="text" th:field="*{nuevosTags}" placeholder="ej: programación, algoritmos">
+            </label>
+        </div>
+
+        <button type="submit">Guardar</button>
+        <button type="button" th:hx-get="@{/admin/materias/lista}">Cancelar</button>
+    </form>
+</div>
+</body>
+</html>

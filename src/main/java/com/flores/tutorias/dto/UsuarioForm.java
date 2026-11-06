@@ -26,5 +26,8 @@ public class UsuarioForm {
     @NotNull(message = "Selecciona un rol")
     private Rol rol;
 
+    // FK a carrera: llega desde un dropdown, pero igual se revalida en el service
+    private Long carreraId;
+
     private boolean activo = true;
 }

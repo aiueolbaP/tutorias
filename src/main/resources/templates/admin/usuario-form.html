@@ -36,6 +36,17 @@
         </div>
 
         <div>
+            <!--  no se ingresan los ids, sino q asoma un dropdown con las carreras -->
+            <label>Carrera (estudiantes y tutores)
+                <select th:field="*{carreraId}">
+                    <option value="">-- Selecciona --</option>
+                    <option th:each="c : ${carreras}" th:value="${c.id}" th:text="${c.nombre}"></option>
+                </select>
+            </label>
+            <span th:if="${#fields.hasErrors('carreraId')}" th:errors="*{carreraId}" style="color:red"></span>
+        </div>
+
+        <div>
             <label><input type="checkbox" th:field="*{activo}"> Activo</label>
         </div>
 

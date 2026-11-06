@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Se incluye en el <head> de cada página admin: <th:block th:replace="~{fragments/head :: htmx}"/> -->
+<th:block th:fragment="htmx">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script th:src="@{/js/csrf-htmx.js}"></script>
+</th:block>
+</body>
+</html>

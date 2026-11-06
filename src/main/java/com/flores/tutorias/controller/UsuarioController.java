@@ -34,14 +34,14 @@ public class UsuarioController {
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         model.addAttribute("usuarioForm", new UsuarioForm());
-        model.addAttribute("roles", Rol.values());
+        cargarCombos(model); //para roles y carreras
         return "admin/usuario-form :: form";
     }
 
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable Long id, Model model) {
         model.addAttribute("usuarioForm", usuarioService.obtenerForm(id));
-        model.addAttribute("roles", Rol.values());
+        cargarCombos(model);
         return "admin/usuario-form :: form";
     }
 
@@ -50,7 +50,7 @@ public class UsuarioController {
                           BindingResult result, Model model) {
         usuarioService.validarNegocio(form, result);
         if (result.hasErrors()) {
-            model.addAttribute("roles", Rol.values());
+            cargarCombos(model);
             return "admin/usuario-form :: form";
         }
         usuarioService.guardar(form);
@@ -65,5 +65,10 @@ public class UsuarioController {
         }
         model.addAttribute("usuarios", usuarioService.listar());
         return "admin/usuarios :: lista";
+    }
+
+    private void cargarCombos(Model model) {
+        model.addAttribute("roles", Rol.values());
+        model.addAttribute("carreras", usuarioService.carreras());
     }
 }

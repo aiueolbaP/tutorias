@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutorías</title>
+    <th:block th:replace="~{fragments/head :: htmx}"></th:block>
+</head>
+<body>
+<h1>Gestión de tutorías</h1>
+<a th:href="@{/admin/panel}">Volver al panel</a>
+
+<div id="contenido" hx-target="#contenido">
+    <div th:fragment="lista">
+        <button th:hx-get="@{/admin/tutorias/nueva}">Nueva tutoría</button>
+
+        <table border="1">
+            <thead>
+            <tr><th>Título</th><th>Materia</th><th>Tutor</th><th>Fecha</th><th>Horario</th>
+                <th>Cupo</th><th>Aula</th><th>Estado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="t : ${tutorias}">
+                <td th:text="${t.titulo}"></td>
+                <td th:text="${t.materia.nombre}"></td>
+                <td th:text="${t.tutor.nombre}"></td>
+                <td th:text="${#temporals.format(t.fecha, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#temporals.format(t.horaInicio, 'HH:mm')} + ' - ' + ${#temporals.format(t.horaFin, 'HH:mm')}"></td>
+                <td th:text="${t.cupo}"></td>
+                <td th:text="${t.direccionFisica != null} ? ${t.direccionFisica} : 'Virtual'"></td>
+                <td th:text="${t.estado}"></td>
+                <td>
+                    <button th:hx-get="@{/admin/tutorias/{id}/editar(id=${t.id})}">Editar</button>
+                    <button th:hx-delete="@{/admin/tutorias/{id}(id=${t.id})}"
+                            hx-confirm="¿Eliminar esta tutoría?">Eliminar</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

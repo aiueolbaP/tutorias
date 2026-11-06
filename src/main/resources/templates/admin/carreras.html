@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Carreras</title>
+    <th:block th:replace="~{fragments/head :: htmx}"></th:block>
+</head>
+<body>
+<h1>Gestión de carreras</h1>
+<a th:href="@{/admin/panel}">Volver al panel</a>
+
+<div id="contenido" hx-target="#contenido">
+    <div th:fragment="lista">
+        <p th:if="${error}" th:text="${error}" style="color:red"></p>
+
+        <button th:hx-get="@{/admin/carreras/nueva}">Nueva carrera</button>
+
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Tags</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${carreras}">
+                <td th:text="${c.nombre}"></td>
+                <td>
+                    <span th:each="t, iter : ${c.tags}"
+                          th:text="${t.nombre} + (${iter.last} ? '' : ', ')"></span>
+                    <span th:if="${#lists.isEmpty(c.tags)}">—</span>
+                </td>
+                <td>
+                    <button th:hx-get="@{/admin/carreras/{id}/editar(id=${c.id})}">Editar</button>
+                    <button th:hx-delete="@{/admin/carreras/{id}(id=${c.id})}"
+                            hx-confirm="¿Eliminar esta carrera?">Eliminar</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

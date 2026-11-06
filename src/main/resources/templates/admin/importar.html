@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Importar datos</title>
+    <th:block th:replace="~{fragments/head :: htmx}"></th:block>
+</head>
+<body>
+<h1>Importar datos</h1>
+<a th:href="@{/admin/panel}">Volver al panel</a>
+
+<p>Formatos: <b>.csv</b> (UTF-8, separador , o ;), <b>.xlsx</b> (primera hoja) o <b>.json</b>.
+    La primera fila/clave son los nombres de columna. Importa en orden: tags → carreras → materias → usuarios → tutorías.
+    Si hay un solo error, no se importa nada.</p>
+
+<form th:hx-post="@{/admin/importar}" hx-encoding="multipart/form-data"
+      hx-target="#resultado" hx-indicator="#cargando">
+    <label>¿Qué importas?
+        <select name="tipo" required>
+            <option th:each="t : ${tipos}" th:value="${t}" th:text="${t.etiqueta}"></option>
+        </select>
+    </label>
+    <input type="file" name="archivo" accept=".csv,.xlsx,.json" required>
+    <button type="submit">Importar</button>
+    <span id="cargando" class="htmx-indicator">Procesando...</span>
+</form>
+
+<div id="resultado">
+    <div th:fragment="resultado" th:if="${resultado != null}">
+        <p th:if="${resultado.ok()}" style="color:green">
+            Importación exitosa: <span th:text="${resultado.creados()}"></span> creados,
+            <span th:text="${resultado.actualizados()}"></span> actualizados / ya existentes.
+        </p>
+        <div th:unless="${resultado.ok()}" style="color:red">
+            <p>No se guardó nada. Corrige estos errores y vuelve a subir el archivo:</p>
+            <ul>
+                <li th:each="e : ${resultado.errores()}" th:text="${e}"></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<h2>Columnas esperadas</h2>
+<table border="1">
+    <tr><th>Tipo</th><th>Columnas</th></tr>
+    <tr th:each="t : ${tipos}">
+        <td th:text="${t.etiqueta}"></td>
+        <td th:text="${t.columnas}"></td>
+    </tr>
+</table>
+</body>
+</html>

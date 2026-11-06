@@ -27,5 +27,10 @@ public class Usuario {
     @Column(nullable = false)
     private Rol rol;
 
+    // null para ADMIN y obligatoria para los demas
+    @ManyToOne
+    @JoinColumn(name = "id_carrera")
+    private Carrera carrera;
+
     private boolean activo = true;
 }

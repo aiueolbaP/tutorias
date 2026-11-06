@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel</title>
+</head>
+<body>
+<h1 th:text="${titulo}">Panel</h1>
+
+<nav th:if="${esAdmin}">
+    <ul>
+        <li><a th:href="@{/admin/importar}">Importar datos (CSV / Excel / JSON)</a></li>
+        <li><a th:href="@{/admin/carreras}">Carreras</a></li>
+        <li><a th:href="@{/admin/materias}">Materias</a></li>
+        <li><a th:href="@{/admin/usuarios}">Usuarios</a></li>
+        <li><a th:href="@{/admin/tutorias}">Tutorías</a></li>
+    </ul>
+</nav>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Cerrar sesión</button>
+</form>
+</body>
+</html>

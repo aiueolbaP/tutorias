@@ -10,6 +10,7 @@ public class PanelController {
     @GetMapping("/admin/panel")
     public String admin(Model model) {
         model.addAttribute("titulo", "Panel de Administrador");
+        model.addAttribute("esAdmin", true);
         return "panel";
     }
 

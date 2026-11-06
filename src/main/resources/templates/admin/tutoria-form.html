@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="form">
+    <h2 th:text="${tutoriaForm.id == null} ? 'Nueva tutoría' : 'Editar tutoría'"></h2>
+
+    <form th:hx-post="@{/admin/tutorias}" th:object="${tutoriaForm}">
+        <input type="hidden" th:field="*{id}">
+
+        <div>
+            <label>Título <input type="text" th:field="*{titulo}"></label>
+            <span th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Descripción <input type="text" th:field="*{descripcion}"></label>
+            <span th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" style="color:red"></span>
+        </div>
+
+        <!-- DROPDOWN EN CASCADA: al cambiar la carrera, HTMX pide las materias afines
+             (carrera_tag ∩ materia_tag) y reemplaza SOLO las <option> del select de materia -->
+        <div>
+            <label>Carrera (filtra las materias)
+                <select th:field="*{carreraId}"
+                        th:hx-get="@{/admin/tutorias/materias}"
+                        hx-trigger="change"
+                        hx-target="#materiaId"
+                        hx-swap="innerHTML">
+                    <option value="">-- Todas --</option>
+                    <option th:each="c : ${carreras}" th:value="${c.id}" th:text="${c.nombre}"></option>
+                </select>
+            </label>
+        </div>
+
+        <div>
+            <label>Materia
+                <select th:field="*{materiaId}">
+                    <th:block th:fragment="opcionesMaterias">
+                        <option value="">-- Selecciona --</option>
+                        <option th:each="m : ${materias}" th:value="${m.id}" th:text="${m.nombre}"></option>
+                    </th:block>
+                </select>
+            </label>
+            <span th:if="${#fields.hasErrors('materiaId')}" th:errors="*{materiaId}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Tutor
+                <select th:field="*{tutorId}">
+                    <option value="">-- Selecciona --</option>
+                    <option th:each="t : ${tutores}" th:value="${t.id}" th:text="${t.nombre}"></option>
+                </select>
+            </label>
+            <span th:if="${#fields.hasErrors('tutorId')}" th:errors="*{tutorId}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Fecha <input type="date" th:field="*{fecha}"></label>
+            <span th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Hora inicio <input type="time" th:field="*{horaInicio}"></label>
+            <span th:if="${#fields.hasErrors('horaInicio')}" th:errors="*{horaInicio}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Hora fin <input type="time" th:field="*{horaFin}"></label>
+            <span th:if="${#fields.hasErrors('horaFin')}" th:errors="*{horaFin}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Cupo <input type="number" th:field="*{cupo}" min="1"></label>
+            <span th:if="${#fields.hasErrors('cupo')}" th:errors="*{cupo}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Enlace de reunión <input type="url" th:field="*{enlaceReunion}"></label>
+            <span th:if="${#fields.hasErrors('enlaceReunion')}" th:errors="*{enlaceReunion}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Aula (opcional) <input type="text" th:field="*{direccionFisica}" placeholder="Aula 315"></label>
+            <span th:if="${#fields.hasErrors('direccionFisica')}" th:errors="*{direccionFisica}" style="color:red"></span>
+        </div>
+
+        <button type="submit">Guardar</button>
+        <button type="button" th:hx-get="@{/admin/tutorias/lista}">Cancelar</button>
+    </form>
+</div>
+</body>
+</html>

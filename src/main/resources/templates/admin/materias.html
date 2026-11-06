@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Materias</title>
+    <th:block th:replace="~{fragments/head :: htmx}"></th:block>
+</head>
+<body>
+<h1>Gestión de materias</h1>
+<a th:href="@{/admin/panel}">Volver al panel</a>
+
+<div id="contenido" hx-target="#contenido">
+    <div th:fragment="lista">
+        <p th:if="${error}" th:text="${error}" style="color:red"></p>
+
+        <button th:hx-get="@{/admin/materias/nueva}">Nueva materia</button>
+
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Carrera</th>
+                <th>Descripción</th>
+                <th>Tags</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${materias}">
+                <td th:text="${m.nombre}"></td>
+                <td th:text="${m.carrera != null} ? ${m.carrera.nombre} : '—'"></td>
+                <td th:text="${m.descripcion != null} ? ${m.descripcion} : '—'"></td>
+                <td>
+                    <span th:each="t, iter : ${m.tags}"
+                          th:text="${t.nombre} + (${iter.last} ? '' : ', ')"></span>
+                    <span th:if="${#lists.isEmpty(m.tags)}">—</span>
+                </td>
+                <td>
+                    <button th:hx-get="@{/admin/materias/{id}/editar(id=${m.id})}">Editar</button>
+                    <button th:hx-delete="@{/admin/materias/{id}(id=${m.id})}"
+                            hx-confirm="¿Eliminar esta materia?">Eliminar</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

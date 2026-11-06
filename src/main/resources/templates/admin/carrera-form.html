@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="form">
+    <h2 th:text="${carreraForm.id == null} ? 'Nueva carrera' : 'Editar carrera'"></h2>
+
+    <form th:hx-post="@{/admin/carreras}" th:object="${carreraForm}">
+        <input type="hidden" th:field="*{id}">
+
+        <div>
+            <label>Nombre
+                <input type="text" th:field="*{nombre}">
+            </label>
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red"></span>
+        </div>
+
+        <div>
+            <label>Tags asociados:</label>
+            <div style="max-height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; margin: 5px 0;">
+                <div th:each="tag : ${tags}">
+                    <label>
+                        <input type="checkbox" th:field="*{tagIds}" th:value="${tag.id}">
+                        <span th:text="${tag.nombre}"></span>
+                    </label>
+                </div>
+                <div th:if="${#lists.isEmpty(tags)}"><em>No hay tags registrados aún</em></div>
+            </div>
+        </div>
+
+        <div>
+            <label>Nuevos tags (opcional, separados por coma):
+                <input type="text" th:field="*{nuevosTags}" placeholder="ej: desarrollo, ciberseguridad">
+            </label>
+        </div>
+
+        <button type="submit">Guardar</button>
+        <button type="button" th:hx-get="@{/admin/carreras/lista}">Cancelar</button>
+    </form>
+</div>
+</body>
+</html>
